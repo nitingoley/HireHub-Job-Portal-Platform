@@ -2,15 +2,22 @@ import { assets } from "../assets/assets";
 
 const Footer = () => {
   return (
-    <div className="container items-center justify-between px-4 2xl:px-20 mx-auto flex ">
-      <img width={160} src={assets.logo} alt="" />
-      <p className="flex-1  border-1 border-gray-200 max-sm:hidden pl-4 text-sm ">Copyright @nitingoley.dev | All right reserved</p>
-      <div className="flex gap-2.5 ">
-        <img width={38} src={assets.facebook_icon} alt="" />
-        <img width={38} src={assets.twitter_icon} alt="" />
-        <img width={38} src={assets.instagram_icon} alt="" />
+    <footer className="container mx-auto px-4 2xl:px-20 py-6 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4 text-sm">
+      {/* Logo */}
+      <img width={160} src={assets.logo} alt="Logo" />
+
+      {/* Copyright */}
+      <p className="text-gray-600 max-sm:w-full max-sm:text-center">
+        © {new Date().getFullYear()} nitingoley.dev | All rights reserved
+      </p>
+
+      {/* Social Icons */}
+      <div className="flex gap-2.5">
+        <img width={30} src={assets.facebook_icon} alt="Facebook" />
+        <img width={30} src={assets.twitter_icon} alt="Twitter" />
+        <img width={30} src={assets.instagram_icon} alt="Instagram" />
       </div>
-    </div>
+    </footer>
   );
 };
 
