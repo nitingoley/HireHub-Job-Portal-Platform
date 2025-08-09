@@ -1,3 +1,7 @@
+<img width="1349" height="648" alt="Screenshot 2025-08-09 135055" src="https://github.com/user-attachments/assets/fa269f2d-e471-4e7b-8a0f-0d6905fed911" />
+<img width="1362" height="650" alt="Screenshot 2025-08-09 134933" src="https://github.com/user-attachments/assets/3734386f-c122-4f15-8da7-46cbcf13224e" />
+<img width="1366" height="691" alt="Screenshot 2025-08-09 134902" src="https://github.com/user-attachments/assets/4cce7dcc-c4b1-4781-b986-423fa2cffd7e" />
+<img width="1353" height="679" alt="Screenshot 2025-08-09 134729" src="https://github.com/user-attachments/assets/719197d5-cebf-425c-8c46-d89ff7300c11" />
 # 💼 HireHub  
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)  
