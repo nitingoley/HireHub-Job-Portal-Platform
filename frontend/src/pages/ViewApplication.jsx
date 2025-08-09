@@ -1,4 +1,3 @@
-import React from "react";
 import { assets, viewApplicationsPageData } from "../assets/assets";
 
 const ViewApplication = () => {
