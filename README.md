@@ -50,7 +50,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/hirehub.git
+git clone https://github.com/nitingoley/HireHub.git
 cd hirehub
 
 # Install dependencies
@@ -85,14 +85,14 @@ Feel free to fork and submit a PR.
 📄 License
 This project is licensed under the MIT License.
 
-Made with ❤️ by Your Nitin Goley
+👨‍💻 Author
+Nitin Goley
+📧 Email: nitingoley42@gmail.com
+🔗 LinkedIn: linkedin.com/in/nitingoley42
+💻 GitHub: github.com/nitingoley
 
-yaml
-Copy
-Edit
+Made with ❤️ by Nitin Goley
 
 ---
-
-If you want, I can also make you a **README with a visual banner** at the top like professional open-source projects so it grabs recruiters’ attention instantly when they open your GitHub.  
-
-Do you want me to make that version?
+If you want, I can also design you a **fancy banner image** for the top of the README so it looks like a professional SaaS product on GitHub.  
+Do you want me to make that?
