@@ -11,28 +11,26 @@ import { clerkWebhooks } from "./controllers/webhook.js";
 // connect to db
 connectDB();
 
-// The error handler must be registered before any other error middleware and after all controllers
+// sentry
 Sentry.setupExpressErrorHandler(app);
 
-
-// routes 
-app.get("/", function rootHandler(req, res) {
+// routes
+app.get("/", (req, res) => {
   res.end("Hello world!");
 });
 
+// ⚡ Clerk webhook route FIRST with raw body
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
-// Normal routes ke liye JSON parser
-app.use(express.json());
-
-// Clerk webhook ke liye RAW body parser
-app.post("/webhook", express.raw({ type: "application/json" }), clerkWebhooks);
-
-
-// middlewares
+// 🔹 Normal middlewares baad mai lagao
 app.use(cors());
 app.use(express.json());
 
 // server running
 app.listen(PORT, () => {
-  console.log(`Server running on the port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
