@@ -21,7 +21,11 @@ app.get("/", function rootHandler(req, res) {
 });
 
 
-app.post("/webhook", clerkWebhooks);
+// Normal routes ke liye JSON parser
+app.use(express.json());
+
+// Clerk webhook ke liye RAW body parser
+app.post("/api/webhooks/clerk", express.raw({ type: "application/json" }), clerkWebhooks);
 
 
 // middlewares
