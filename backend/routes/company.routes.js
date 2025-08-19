@@ -7,7 +7,9 @@ import {
   getcompanyJobApplicant,
   getcompanyPostedJobs,
   loginCompany,
-  postJOb,
+   
+  postJob,
+   
   registerCompany,
 } from "../controllers/companyController.js";
 import upload from "../config/multer.js";
@@ -24,7 +26,7 @@ router.get("/company", protectCompany, getComapnyData);
 
 // Post a Job
 
-router.post("/post-job", protectCompany, postJOb);
+router.post("/post-job", protectCompany, postJob);
 
 //  get applicant data
 router.get("/applicant", protectCompany, getcompanyJobApplicant);

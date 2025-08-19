@@ -3,10 +3,11 @@ import Job from "../models/Job.js";
 // get all jobs
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ visibile: true }).populate({
-      path: "companyId",
-      select: "-password",
-    });
+const jobs = await Job.find({ visibile: true }).populate({
+  path: "companyId",
+  select: "-password",
+});
+
 
     res.json({
       success: true,

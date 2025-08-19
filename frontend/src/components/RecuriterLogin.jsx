@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RecuriterLogin = () => {
   const [state, setState] = useState("Login");
@@ -9,25 +12,70 @@ const RecuriterLogin = () => {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(false);
   const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false);
-  const {setShowRecuriterLogin} = useContext(AppContext);
+  const { setShowRecuriterLogin, backendUrl, setCompanyToken, setCompanyData } =
+    useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    if (state == "Sign Up" && !isTextDataSubmitted) {
-      setIsTextDataSubmitted(true);
+    try {
+      if (state == "Sign Up" && !isTextDataSubmitted) {
+       return setIsTextDataSubmitted(true);
+      }
+
+      if (state === "Login") {
+        const { data } = await axios.post(backendUrl + "/api/company/login", {
+          email,
+          password,
+        });
+
+        if (data.success) {
+          console.log(data);
+          setCompanyData(data.company);
+          setCompanyToken(data.token);
+          localStorage.setItem("companyToken", data.token);
+          setShowRecuriterLogin(false);
+          navigate("/dashboard");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("image", image);
+
+        const { data } = await axios.post(
+          backendUrl + "/api/company/register",
+          formData
+        );
+
+        if (data.success) {
+          console.log(data);
+          setCompanyData(data.company);
+          setCompanyToken(data.token);
+          localStorage.setItem("companyToken", data.token);
+          setShowRecuriterLogin(false);
+          navigate("/dashboard");
+        } else {
+           toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
 
-
-  useEffect(()=>{
-     document.body.style.overflow = "hidden"
-
-     return ()=>{
-      document.body.style.overflow = "unset"
-     }
-  },[]);
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center">
@@ -139,12 +187,14 @@ const RecuriterLogin = () => {
               Login
             </span>{" "}
           </p>
-        )} 
+        )}
 
-        <img src={assets.cross_icon} 
-        onClick={e=>setShowRecuriterLogin(false)}
-         className="absolute top-5 right-5 cursor-pointer"
-        alt="" />
+        <img
+          src={assets.cross_icon}
+          onClick={(e) => setShowRecuriterLogin(false)}
+          className="absolute top-5 right-5 cursor-pointer"
+          alt=""
+        />
       </form>
     </div>
   );

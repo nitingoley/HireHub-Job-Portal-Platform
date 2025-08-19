@@ -1,22 +1,53 @@
-import React, { useState } from 'react';
-import { manageJobsData } from "../assets/assets";
+import { useState, useEffect, useContext } from 'react';
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const ManageJobs = () => {
   const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]);
+  const { companyToken, backendUrl } = useContext(AppContext);
 
-  // Store visibility state for each job
-  const [jobs, setJobs] = useState(manageJobsData);
+  // Fetch jobs
+  const fetchCompanyJob = async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/company/list-jobs`, {
+        headers: { token: companyToken }
+      });
 
-  // Handle visibility toggle
-  const handleToggle = (index) => {
-    setJobs(prevJobs =>
-      prevJobs.map((job, i) =>
-        i === index ? { ...job, visible: !job.visible } : job
-      )
-    );
+      if (data.success) {
+        setJobs(data.jobsData.reverse());
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
+  // Toggle visibility
+  const handleToggle = async (id) => {
+    try {
+      const {data} = await axios.post(backendUrl+'/api/company/change-visiblity', {
+        id
+      },{headers: {token: companyToken}});
+      
+      if(data.success) {
+        toast.success(data.message);
+        fetchCompanyJob();
+      }else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (companyToken) fetchCompanyJob();
+  }, [companyToken]);
 
   return (
     <div className="container p-4 max-w-5xl">
@@ -34,11 +65,11 @@ const ManageJobs = () => {
           </thead>
           <tbody>
             {jobs.map((job, index) => (
-              <tr key={index} className="text-gray-700">
+              <tr key={job._id} className="text-gray-700">
                 <td className="py-2 px-4 border-b max-sm:hidden">{index + 1}</td>
                 <td
                   className="py-2 px-4 border-b cursor-pointer hover:underline"
-                  onClick={() => navigate(`/dashboard/job/${index}`)}
+                  onClick={() => navigate(`/dashboard/job/${job._id}`)}
                 >
                   {job.title}
                 </td>
@@ -46,13 +77,15 @@ const ManageJobs = () => {
                   {moment(job.date).format("ll")}
                 </td>
                 <td className="py-2 px-4 border-b max-sm:hidden">{job.location}</td>
-                <td className="py-2 px-4 border-b text-center">{job.applicants}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {job.applicants?.length || 0}
+                </td>
                 <td className="py-2 px-4 border-b text-center">
                   <input
-                    className="scale-125"
+                    className="scale-125 cursor-pointer"
                     type="checkbox"
-                    checked={job.visible || false}
-                    onChange={() => handleToggle(index)}
+                    checked={job.visible}
+                     onChange={()=>handleToggle(job._id)}
                   />
                 </td>
               </tr>

@@ -1,45 +1,51 @@
-import "./config/instrument.js";
 import express from "express";
-const app = express();
 import cors from "cors";
 import "dotenv/config";
 import connectDB from "./config/db.js";
-const PORT = process.env.PORT || 5000;
-import * as Sentry from "@sentry/node";
-import { clerkWebhooks } from "./controllers/webhook.js";
-import companyRoutes from "./routes/company.routes.js";
 import connectCloudinary from "./config/cloudinary.js";
+import companyRoutes from "./routes/company.routes.js";
 import jobRoutes from "./routes/job.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import { clerkWebhooks } from "./controllers/webhook.js";
+import { clerkMiddleware } from "@clerk/express";
+import * as Sentry from "@sentry/node";
 
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-
-// connect to db
+// connect db + cloudinary
 await connectDB();
 await connectCloudinary();
 
-
+// middlewares FIRST
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(express.json());
 
 // sentry
 Sentry.setupExpressErrorHandler(app);
+
+// ⚡ Clerk webhook (raw body)
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
 // routes
 app.get("/", (req, res) => {
   res.end("Hello world!");
 });
 
-// ⚡ Clerk webhook route FIRST with raw body
-app.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  clerkWebhooks
-);
-app.use("/api/company"  , companyRoutes);
-app.use("/api/jobs", jobRoutes)
+app.use("/api/company", companyRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/users", userRoutes);
 
-
-// 🔹 Normal middlewares baad mai lagao
-app.use(cors());
-app.use(express.json());
+app.use(clerkMiddleware());
 
 // server running
 app.listen(PORT, () => {
