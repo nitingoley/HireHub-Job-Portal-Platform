@@ -7,9 +7,17 @@ import connectDB from "./config/db.js";
 const PORT = process.env.PORT || 5000;
 import * as Sentry from "@sentry/node";
 import { clerkWebhooks } from "./controllers/webhook.js";
+import companyRoutes from "./routes/company.routes.js";
+import connectCloudinary from "./config/cloudinary.js";
+import jobRoutes from "./routes/job.routes.js";
+
+
 
 // connect to db
-connectDB();
+await connectDB();
+await connectCloudinary();
+
+
 
 // sentry
 Sentry.setupExpressErrorHandler(app);
@@ -25,6 +33,9 @@ app.post(
   express.raw({ type: "application/json" }),
   clerkWebhooks
 );
+app.use("/api/company"  , companyRoutes);
+app.use("/api/jobs", jobRoutes)
+
 
 // 🔹 Normal middlewares baad mai lagao
 app.use(cors());
